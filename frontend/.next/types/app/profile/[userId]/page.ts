@@ -1,4 +1,4 @@
-// File: C:\Users\hp\Downloads\mentor-me\app\profile\[userId]\page.jsx
+// File: C:\Users\hp\Downloads\mentor-me\frontend\app\profile\[userId]\page.jsx
 import * as entry from '../../../../../app/profile/[userId]/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
