@@ -11,3 +11,140 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+
+enum Role {
+  MENTOR
+  MENTEE
+}
+
+enum ProjectStatus {
+  OPEN
+  CLOSED
+  COMPLETED
+}
+
+enum ApplicationStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
+  CANCELLED
+}
+
+enum SubmissionStatus {
+  NOT_SUBMITTED
+  SUBMITTED
+  UNDER_REVIEW
+  REVISION_REQUESTED
+  APPROVED
+}
+
+model User {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  password       String
+  name           String
+  role           Role
+  bio            String?
+  skills         String[]
+  profilePictureUrl String?
+  isEmailVerified Boolean @default(false)
+  isOnboarded     Boolean @default(false)
+  emailVerificationToken String?
+  pendingEmail    String?
+  passwordResetToken String?
+  passwordResetTokenExpiry DateTime?
+  isDeleted       Boolean @default(false)
+  deletedAt       DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  refreshTokens  RefreshToken[]
+  createdProjects Project[] @relation("ProjectCreator")
+  applicationsAsMentee Application[] @relation("ApplicationMentee")
+  conversationsAsMentee Conversation[] @relation("ConversationMentee")
+  conversationsAsMentor Conversation[] @relation("ConversationMentor")
+  sentMessages    Message[] @relation("MessageSender")
+  submissionsAsMentee Submission[] @relation("SubmissionMentee")
+}
+
+model RefreshToken {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields: [userId], references: [id])
+  token String @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Project {
+  id String @id @default(cuid())
+  title String
+  description String
+  skills String[]
+  duration String
+  status ProjectStatus @default(OPEN)
+  createdById String
+  createdBy User @relation("ProjectCreator", fields: [createdById], references: [id])
+  applications Application[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Application {
+  id String @id @default(cuid())
+  projectId String @unique
+  project Project @relation(fields: [projectId], references: [id])
+  menteeId String @unique
+  mentee User @relation("ApplicationMentee", fields: [menteeId], references: [id])
+  message String
+  cvUrl String?
+  cvFileName String?
+  status ApplicationStatus @default(PENDING)
+  rejectionReason String?
+  appliedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  conversation Conversation?
+  submission Submission?
+}
+
+model Conversation {
+  id String @id @default(cuid())
+  applicationId String @unique
+  application Application @relation(fields: [applicationId], references: [id])
+  menteeId String
+  mentee User @relation("ConversationMentee", fields: [menteeId], references: [id])
+  mentorId String
+  mentor User @relation("ConversationMentor", fields: [mentorId], references: [id])
+  isArchived Boolean @default(false)
+  archivedAt DateTime?
+  createdAt DateTime @default(now())
+  messages Message[]
+}
+
+model Message {
+  id String @id @default(cuid())
+  conversationId String
+  conversation Conversation @relation(fields: [conversationId], references: [id])
+  senderId String
+  sender User @relation("MessageSender", fields: [senderId], references: [id])
+  content String
+  isRead Boolean @default(false)
+  readAt DateTime?
+  sentAt DateTime @default(now())
+}
+
+model Submission {
+  id String @id @default(cuid())
+  applicationId String @unique
+  application Application @relation(fields: [applicationId], references: [id])
+  menteeId String
+  mentee User @relation("SubmissionMentee", fields: [menteeId], references: [id])
+  attempt Int @default(1)
+  githubUrl String
+  status SubmissionStatus @default(NOT_SUBMITTED)
+  mentorFeedback String?
+  reviewedAt DateTime?
+  submittedAt DateTime @default(now())
+}
