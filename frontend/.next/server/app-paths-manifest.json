@@ -1,7 +1,4 @@
 {
-  "/page": "app/page.js",
-  "/onboarding/page": "app/onboarding/page.js",
-  "/settings/page": "app/settings/page.js",
-  "/profile/page": "app/profile/page.js",
-  "/profile/[userId]/page": "app/profile/[userId]/page.js"
+  "/register/page": "app/register/page.js",
+  "/page": "app/page.js"
 }
