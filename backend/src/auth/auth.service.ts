@@ -68,6 +68,7 @@ export class AuthService {
     console.log(`Click here to verify your account: ${verificationUrl}`);
     console.log('----------------------------------------------------');
 
+    //This will be where we develop email servuces
     //await this.mailService.sendUserConfirmation(newUser.email, rawVerificationToken);
 
     return {
