@@ -1,4 +1,24 @@
 {
+  "/error-pages/page": "app/error-pages/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/dashboard/page": "app/dashboard/page.js",
+  "/create-project/page": "app/create-project/page.js",
+  "/messages/page": "app/messages/page.js",
+  "/forgot-password/page": "app/forgot-password/page.js",
+  "/my-projects/[id]/edit/page": "app/my-projects/[id]/edit/page.js",
+  "/my-projects/[id]/page": "app/my-projects/[id]/page.js",
+  "/login/page": "app/login/page.js",
+  "/page": "app/page.js",
+  "/my-projects/[id]/applicants/page": "app/my-projects/[id]/applicants/page.js",
+  "/my-projects/page": "app/my-projects/page.js",
+  "/profile/[userId]/page": "app/profile/[userId]/page.js",
+  "/projects/[id]/page": "app/projects/[id]/page.js",
+  "/profile/page": "app/profile/page.js",
+  "/onboarding/page": "app/onboarding/page.js",
   "/register/page": "app/register/page.js",
-  "/page": "app/page.js"
+  "/settings/page": "app/settings/page.js",
+  "/projects/page": "app/projects/page.js",
+  "/reset-password/page": "app/reset-password/page.js",
+  "/verify-email/page": "app/verify-email/page.js",
+  "/submission-review/page": "app/submission-review/page.js"
 }
