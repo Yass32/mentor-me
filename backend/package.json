@@ -21,6 +21,7 @@
     "prisma": "node node_modules/prisma/build/index.js"
   },
   "dependencies": {
+    "@nestjs-modules/mailer": "^2.3.7",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.4",
     "@nestjs/core": "^11.0.1",
@@ -38,7 +39,7 @@
     "class-validator": "^0.15.1",
     "cookie-parser": "^1.4.7",
     "multer": "^2.2.0",
-    "nodemailer": "^9.0.3",
+    "nodemailer": "^9.1.1",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "pg": "^8.22.0",

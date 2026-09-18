@@ -1,15 +1,21 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import * as crypto from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
 import { RegisterDto } from './dto/register.dto';
 import { ConfigService } from '@nestjs/config';
 import { LoginDto } from './dto/login.dto';
+import { MailService } from 'src/mail/mail.service';
 @Injectable()
 export class AuthService {
   constructor(
     private prisma: PrismaService,
     private configService: ConfigService,
+    private mailService: MailService,
   ) {}
 
   async hashPassword(password: string): Promise<string> {
@@ -70,7 +76,7 @@ export class AuthService {
     console.log('----------------------------------------------------');
 
     //This will be where we develop email servuces
-    //await this.mailService.sendUserConfirmation(newUser.email, rawVerificationToken);
+    await this.mailService.sendEmailVerification(newUser.email, rawVerificationToken);
 
     // Issue auth tokens
     const tokens = await this.generateTokens(newUser.id, newUser.email);
@@ -164,7 +170,10 @@ export class AuthService {
 
   async verifyEmail(token: string) {
     const rawtoken = token;
-    const incomingHashedToken = crypto.createHash('sha256').update(token).digest('hex');
+    const incomingHashedToken = crypto
+      .createHash('sha256')
+      .update(token)
+      .digest('hex');
     const user = await this.prisma.user.findFirst({
       where: {
         emailVerificationToken: incomingHashedToken,

@@ -8,6 +8,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { ValidationPipe } from '@nestjs/common';
 import { UsersService } from './users/users.service';
 import { UsersModule } from './users/users.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { UsersModule } from './users/users.module';
     ]),
     PrismaModule,
     UsersModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [
