@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { MailService } from './mail.service';
-import { MailerModule } from '@nestjs-modules/mailer';
+import { MailerModule, MailerOptions } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
 
 @Global() // Make it global so Auth can use it later
@@ -9,10 +9,10 @@ import { ConfigService } from '@nestjs/config';
     // Use forRootAsync so we can safely read our .env secrets before connecting!
     MailerModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
+      useFactory: (configService: ConfigService): MailerOptions => ({
         transport: {
           host: configService.get<string>('SMTP_HOST'),
-          port: configService.get<number>('SMTP_PORT'),
+          port: Number(configService.get<string>('SMTP_PORT')),
           auth: {
             user: configService.get<string>('SMTP_USER'),
             pass: configService.get<string>('SMTP_PASS'),
