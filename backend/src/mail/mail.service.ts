@@ -1,20 +1,19 @@
-import { Injectable } from '@nestjs/common';
-import { MailerService } from '@nestjs-modules/mailer';
-import { ConfigService } from '@nestjs/config';
+import { Inject, Injectable } from '@nestjs/common';
+import { Resend } from 'resend';
 
 @Injectable()
 export class MailService {
-  // Inject Nodemailers wrapped service
   constructor(
-    private mailerService: MailerService,
-    private configService: ConfigService,
+    @Inject('RESEND_CLIENT') private resend: Resend,
+    @Inject('FRONTEND_URL') private frontendUrl: string,
   ) {}
 
-  async sendEmailVerification(email: string, token: string) {
-    const url = this.configService.get<string>('FRONTEND_URL');
-    const verificationUrl = `${url}/verify-email?token=${token}`;
+  sendEmailVerification(email: string, token: string) {
+    const verificationUrl = `${this.frontendUrl}/verify-email?token=${token}`;
+
     // TODO: Send email with verificationUrl
-    await this.mailerService.sendMail({
+    this.resend.emails.send({
+      from: 'MentorMe <noreply@mentorme.com>',
       to: email,
       subject: 'Welcome to Mentorme! Verify your Email',
       html: `

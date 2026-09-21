@@ -1,30 +1,31 @@
 import { Global, Module } from '@nestjs/common';
 import { MailService } from './mail.service';
-import { MailerModule } from '@nestjs-modules/mailer';
 import { ConfigService } from '@nestjs/config';
+import { Resend } from 'resend';
 
 @Global() // Make it global so Auth can use it later
 @Module({
-  imports: [
-    // Use forRootAsync so we can safely read our .env secrets before connecting!
-    MailerModule.forRootAsync({
+  providers: [
+    MailService,
+
+    // Provider 1: The Resend client instance
+    {
+      provide: 'RESEND_CLIENT',
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        transport: {
-          host: configService.get<string>('SMTP_HOST'),
-          port: configService.get<number>('SMTP_PORT'),
-          auth: {
-            user: configService.get<string>('SMTP_USER'),
-            pass: configService.get<string>('SMTP_PASS'),
-          },
-        },
-        defaults: {
-          from: `"My App Team" <${configService.get<string>('EMAIL_FROM')}>`,
-        },
-      }),
-    }),
+      useFactory: (config: ConfigService) => {
+        return new Resend(config.get<string>('RESEND_API_KEY'));
+      },
+    },
+
+    // Provider 2: The second item (e.g., sender email)
+    {
+      provide: 'FRONTEND_URL',
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        return config.get<string>('FRONTEND_URL');
+      },
+    },
   ],
-  providers: [MailService],
   exports: [MailService], // Export MailService so AuthService can inject it
 })
 export class MailModule {}

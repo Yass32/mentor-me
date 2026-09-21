@@ -76,7 +76,10 @@ export class AuthService {
     console.log('----------------------------------------------------');
 
     //This will be where we develop email servuces
-    await this.mailService.sendEmailVerification(newUser.email, rawVerificationToken);
+    await this.mailService.sendEmailVerification(
+      newUser.email,
+      rawVerificationToken,
+    );
 
     // Issue auth tokens
     const tokens = await this.generateTokens(newUser.id, newUser.email);
